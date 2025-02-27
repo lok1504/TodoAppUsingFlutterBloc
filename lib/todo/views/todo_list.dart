@@ -4,6 +4,7 @@ import 'package:todo/models/todo.dart';
 import 'package:todo/todo/bloc/todo_bloc.dart';
 import 'package:todo/todo/bloc/todo_state.dart';
 import 'package:todo/todo/widgets/todo_list_item.dart';
+import 'package:todo/todo/widgets/todo_search_bar.dart';
 
 class TodoList extends StatelessWidget {
   const TodoList({super.key, required this.openTodoForm});
@@ -25,17 +26,22 @@ class TodoList extends StatelessWidget {
             ),
           ));
         } else if (state is TodoLoadedState) {
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: state.todos.length,
-            itemBuilder: (_, index) {
-              final todo = state.todos[index];
-              return TodoListItem(
-                todo: todo,
-                openTodoForm: openTodoForm,
-              );
-            },
+          return Column(
+            children: [
+              TodoSearchBar(todos: state.todos),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: state.todos.length,
+                itemBuilder: (_, index) {
+                  final todo = state.todos[index];
+                  return TodoListItem(
+                    todo: todo,
+                    openTodoForm: openTodoForm,
+                  );
+                },
+              ),
+            ],
           );
         } else {
           return Placeholder();

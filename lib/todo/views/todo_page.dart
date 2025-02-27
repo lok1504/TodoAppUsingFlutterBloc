@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/models/todo.dart';
 import 'package:todo/todo/bloc/todo_bloc.dart';
+import 'package:todo/todo/bloc/todo_events.dart';
 import 'package:todo/todo/views/todo_form.dart';
 import 'package:todo/todo/views/todo_list.dart';
 
@@ -13,6 +14,9 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
+  bool _isAscending = true;
+  bool _showCompleted = false;
+
   @override
   Widget build(BuildContext context) {
     void openTodoForm({Todo? todo}) {
@@ -35,6 +39,10 @@ class _TodoPageState extends State<TodoPage> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text('Todo'),
+        actions: [
+          _buildSortByTitlePopupMenuButton(context),
+          _buildFilterByIsCompletedPopupMenuButton(context),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -54,6 +62,56 @@ class _TodoPageState extends State<TodoPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSortByTitlePopupMenuButton(BuildContext context) {
+    return PopupMenuButton<bool>(
+      icon: Icon(Icons.sort),
+      tooltip: "Sort by Title",
+      initialValue: _isAscending,
+      onSelected: (bool item) {
+        setState(() {
+          _isAscending = item;
+        });
+
+        context.read<TodoBloc>().add(SortTodoEvent(_isAscending));
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<bool>>[
+        const PopupMenuItem<bool>(
+          value: true,
+          child: Text('A-Z'),
+        ),
+        const PopupMenuItem<bool>(
+          value: false,
+          child: Text('Z-A'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFilterByIsCompletedPopupMenuButton(BuildContext context) {
+    return PopupMenuButton<bool>(
+      icon: Icon(Icons.filter_alt),
+      tooltip: "Filter by Completed",
+      initialValue: _showCompleted,
+      onSelected: (bool item) {
+        setState(() {
+          _showCompleted = item;
+        });
+
+        context.read<TodoBloc>().add(FilterTodoEvent(_showCompleted));
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<bool>>[
+        const PopupMenuItem<bool>(
+          value: false,
+          child: Text('All'),
+        ),
+        const PopupMenuItem<bool>(
+          value: true,
+          child: Text('Completed'),
+        ),
+      ],
     );
   }
 }

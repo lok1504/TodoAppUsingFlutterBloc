@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.klkTheme,
       home: BlocProvider(
-        create: (_) => TodoBloc(todoApi: todoApi)..add(FetchTodosEvent()),
+        create: (_) => TodoBloc(todoApi: todoApi)..add(FetchTodoEvent()),
         child: const TodoPage(),
       ),
     );

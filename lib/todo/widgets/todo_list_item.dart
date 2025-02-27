@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/models/todo.dart';
+import 'package:todo/theme/app_colors.dart';
 import 'package:todo/todo/bloc/todo_bloc.dart';
 import 'package:todo/todo/bloc/todo_events.dart';
 
@@ -36,6 +37,7 @@ class TodoListItem extends StatelessWidget {
         contentPadding: const EdgeInsets.all(8.0),
         leading: Checkbox(
           value: todo.isCompleted,
+          activeColor: AppColors.primaryColor,
           onChanged: (_) {
             var updatedTodo = Todo(
               id: todo.id,
